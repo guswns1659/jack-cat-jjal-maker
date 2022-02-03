@@ -12,10 +12,18 @@
         text-align: center;
     }
 
+    .main-card {
+        margin: 1rem;
+    }
+
     .main-card button {
         position: relative;
         left: -45px;
         bottom: 15px;
+    }
+
+    .main-card img {
+        width: 400px;
     }
 
     .favorites {
@@ -65,7 +73,7 @@
     const MainCard = (props) => {
         return (
             <div className="main-card">
-                <img src={props.img} alt={props.alt} width={props.width}/>
+                <img src={props.img} alt={props.alt} />
                 <button>♡</button>
             </div>
         )
@@ -95,7 +103,6 @@
             <MainCard
                 img="https://cataas.com/cat/60b73094e04e18001194a309/says/react"
                 alt="Cat"
-                width="400"
             ></MainCard>
             <Favorites></Favorites>
         </div>
