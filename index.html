@@ -62,8 +62,14 @@
     }
 
     function CatForm() {
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            console.log("Form submit")
+        }
+
         return (
-            <form>
+            <form onSubmit={handleFormSubmit}>
                 <input type="text" name="name" placeholder="영어 대사를 입력해주세요"/>
                 <button type="submit">생성</button>
             </form>
@@ -71,10 +77,20 @@
     }
 
     const MainCard = (props) => {
+
+        function handleHeartClick() {
+            console.log("Press heart")
+        }
+
+        function handleHeartMouseOver() {
+            console.log("Move over heart")
+        }
+
         return (
             <div className="main-card">
                 <img src={props.img} alt={props.alt} />
-                <button>♡</button>
+                <button onClick={handleHeartClick}
+                        onMouseOver={handleHeartMouseOver}>♡</button>
             </div>
         )
     }
