@@ -109,7 +109,12 @@
 
     const App = () => {
 
+        const CAT1 = "https://cataas.com/cat/60b73094e04e18001194a309/says/react";
+        const CAT2 = "https://cataas.com//cat/5e9970351b7a400011744233/says/inflearn";
+        const CAT3 = "https://cataas.com/cat/595f280b557291a9750ebf65/says/JavaScript";
+
         const [counter, setCounter] = React.useState(1);
+        const [mainCat, setMainCat] = React.useState(CAT1);
 
         console.log("count", counter)
 
@@ -117,6 +122,7 @@
             e.preventDefault();
             console.log("Form submit")
             setCounter(counter + 1);
+            setMainCat(CAT2)
         }
 
         return (
@@ -124,7 +130,7 @@
                 <Title>{counter}번째 고양이 가라사대</Title>
                 <CatForm handleFormSubmit={handleFormSubmit}/>
                 <MainCard
-                    img="https://cataas.com/cat/60b73094e04e18001194a309/says/react"
+                    img={mainCat}
                     alt="Cat"
                 ></MainCard>
                 <Favorites></Favorites>
