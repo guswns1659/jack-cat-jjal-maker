@@ -61,12 +61,7 @@
         )
     }
 
-    function CatForm() {
-
-        function handleFormSubmit(e) {
-            e.preventDefault();
-            console.log("Form submit")
-        }
+    function CatForm({handleFormSubmit}) {
 
         return (
             <form onSubmit={handleFormSubmit}>
@@ -112,21 +107,34 @@
         )
     }
 
-    const app = (
-        <div>
-            <Title>1번째 고양이 가라사대</Title>
-            <CatForm />
-            <MainCard
-                img="https://cataas.com/cat/60b73094e04e18001194a309/says/react"
-                alt="Cat"
-            ></MainCard>
-            <Favorites></Favorites>
-        </div>
-    );
+    const App = () => {
+
+        const [counter, setCounter] = React.useState(1);
+
+        console.log("count", counter)
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            console.log("Form submit")
+            setCounter(counter + 1);
+        }
+
+        return (
+            <div>
+                <Title>{counter}번째 고양이 가라사대</Title>
+                <CatForm handleFormSubmit={handleFormSubmit}/>
+                <MainCard
+                    img="https://cataas.com/cat/60b73094e04e18001194a309/says/react"
+                    alt="Cat"
+                ></MainCard>
+                <Favorites></Favorites>
+            </div>
+        )
+    }
 
     const here = document.querySelector('#app');
 
-    ReactDOM.render(app, here);
+    ReactDOM.render(<App />, here);
 
 </script>
 
