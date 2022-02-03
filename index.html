@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>고양이 가라사대</title>
+</head>
+<style>
+    body {
+        text-align: center;
+    }
+
+    .main-card button {
+        position: relative;
+        left: -45px;
+        bottom: 15px;
+    }
+
+    .favorites {
+        list-style: none;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .favorites img {
+        width: 150px;
+    }
+</style>
+
+<body>
+<div id="app"></div>
+<script
+        src="https://unpkg.com/react@17/umd/react.development.js"
+        crossorigin
+></script>
+<script
+        src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"
+        crossorigin
+></script>
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+</body>
+
+<script type="text/babel">
+    console.log("야옹");
+
+    const Title = (props) => {
+        return (
+            <h1>{props.children}</h1>
+        )
+    }
+
+    function CatForm() {
+        return (
+            <form>
+                <input type="text" name="name" placeholder="영어 대사를 입력해주세요"/>
+                <button type="submit">생성</button>
+            </form>
+        )
+    }
+
+    const MainCard = (props) => {
+        return (
+            <div className="main-card">
+                <img src={props.img} alt={props.alt} width={props.width}/>
+                <button>♡</button>
+            </div>
+        )
+    }
+
+    function CatItem(props) {
+        return (
+            <li>
+                <img src={props.img}/>
+            </li>
+        )
+    }
+
+    function Favorites() {
+        return (
+            <ul className="favorites">
+                <CatItem img="https://cataas.com//cat/5e9970351b7a400011744233/says/inflearn" />
+                <CatItem img="https://cataas.com/cat/595f280b557291a9750ebf65/says/JavaScript" />
+            </ul>
+        )
+    }
+
+    const app = (
+        <div>
+            <Title>1번째 고양이 가라사대</Title>
+            <CatForm />
+            <MainCard
+                img="https://cataas.com/cat/60b73094e04e18001194a309/says/react"
+                alt="Cat"
+                width="400"
+            ></MainCard>
+            <Favorites></Favorites>
+        </div>
+    );
+
+    const here = document.querySelector('#app');
+
+    ReactDOM.render(app, here);
+
+</script>
+
+</html>
