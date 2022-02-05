@@ -73,8 +73,11 @@
 
     const MainCard = (props) => {
 
+        const [heart, setHeart] = React.useState('♡')
+
         function handleHeartClick() {
             console.log("Press heart")
+            heart === "💖" ? setHeart("♡") : setHeart("💖")
         }
 
         function handleHeartMouseOver() {
@@ -85,7 +88,7 @@
             <div className="main-card">
                 <img src={props.img} alt={props.alt}/>
                 <button onClick={handleHeartClick}
-                        onMouseOver={handleHeartMouseOver}>♡
+                        onMouseOver={handleHeartMouseOver}>{heart}
                 </button>
             </div>
         )
