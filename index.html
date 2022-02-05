@@ -55,6 +55,13 @@
 <script type="text/babel">
     console.log("야옹");
 
+    const uuidv4 = () => {
+        return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+            (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+        );
+    }
+
+    // component
     const Title = (props) => {
         return (
             <h1>{props.children}</h1>
@@ -72,23 +79,10 @@
     }
 
     const MainCard = (props) => {
-
-        const [heart, setHeart] = React.useState('♡')
-
-        function handleHeartClick() {
-            console.log("Press heart")
-            heart === "💖" ? setHeart("♡") : setHeart("💖")
-        }
-
-        function handleHeartMouseOver() {
-            console.log("Move over heart")
-        }
-
         return (
             <div className="main-card">
                 <img src={props.img} alt={props.alt}/>
-                <button onClick={handleHeartClick}
-                        onMouseOver={handleHeartMouseOver}>{heart}
+                <button onClick={props.handleHeartClick}>{props.heart}
                 </button>
             </div>
         )
@@ -102,16 +96,11 @@
         )
     }
 
-    function Favorites() {
-        const CAT1 = "https://cataas.com/cat/60b73094e04e18001194a309/says/react";
-        const CAT2 = "https://cataas.com//cat/5e9970351b7a400011744233/says/inflearn";
-        const CAT3 = "https://cataas.com/cat/595f280b557291a9750ebf65/says/JavaScript";
-
-        const cats = [CAT1, CAT2];
+    function Favorites(props) {
 
         return (
             <ul className="favorites">
-                {cats.map(cat => <CatItem key={cat} img={cat}/>)}
+                {props.favorites.map(cat => <CatItem key={uuidv4()} img={cat}/>)}
             </ul>
         )
     }
@@ -121,8 +110,15 @@
         const CAT2 = "https://cataas.com//cat/5e9970351b7a400011744233/says/inflearn";
         const CAT3 = "https://cataas.com/cat/595f280b557291a9750ebf65/says/JavaScript";
 
+        // title
         const [counter, setCounter] = React.useState(1);
+
+        // mainCard
         const [mainCat, setMainCat] = React.useState(CAT1);
+        const [heart, setHeart] = React.useState('♡')
+
+        // favorites
+        const [favorites, setFavorites] = React.useState([CAT1, CAT2]);
 
         console.log("count", counter)
 
@@ -133,15 +129,31 @@
             setMainCat(CAT2)
         }
 
+        function handleHeartClick(e) {
+            console.log("Press heart")
+            console.log("e", e)
+            e.preventDefault()
+            if (heart === "💖") {
+                setHeart("♡")
+                favorites.pop();
+                setFavorites(favorites)
+                return
+            }
+            setHeart("💖")
+            setFavorites([...favorites, mainCat])
+        }
+
         return (
             <div>
                 <Title>{counter}번째 고양이 가라사대</Title>
-                <CatForm handleFormSubmit={handleFormSubmit}/>
+                <CatForm handleFormSubmit={handleFormSubmit} />
                 <MainCard
                     img={mainCat}
                     alt="Cat"
+                    handleHeartClick={handleHeartClick}
+                    heart={heart}
                 ></MainCard>
-                <Favorites></Favorites>
+                <Favorites favorites={favorites}></Favorites>
             </div>
         )
     }
