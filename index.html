@@ -68,18 +68,13 @@
         )
     }
 
-    function CatForm({handleFormSubmit}) {
-
-        const [value, setValue] = React.useState('')
-
-        function handleInputChange(e) {
-            setValue(e.target.value.toUpperCase())
-        }
-
+    function CatForm(props) {
         return (
-            <form onSubmit={handleFormSubmit}>
-                <input type="text" name="name" placeholder="영어 대사를 입력해주세요" value={value} onChange={handleInputChange}/>
+            <form onSubmit={props.handleFormSubmit}>
+                <input type="text" name="name" placeholder="영어 대사를 입력해주세요" value={props.value}
+                       onChange={props.handleInputChange}/>
                 <button type="submit">생성</button>
+                <p style={{ color: 'red'}}>{props.errorMessage}</p>
             </form>
         )
     }
@@ -123,18 +118,6 @@
         const [mainCat, setMainCat] = React.useState(CAT1);
         const [heart, setHeart] = React.useState('♡')
 
-        // favorites
-        const [favorites, setFavorites] = React.useState([CAT1, CAT2]);
-
-        console.log("count", counter)
-
-        function handleFormSubmit(e) {
-            e.preventDefault();
-            console.log("Form submit")
-            setCounter(counter + 1);
-            setMainCat(CAT2)
-        }
-
         function handleHeartClick(e) {
             console.log("Press heart")
             console.log("e", e)
@@ -149,10 +132,43 @@
             setFavorites([...favorites, mainCat])
         }
 
+        // favorites
+        const [favorites, setFavorites] = React.useState([CAT1, CAT2]);
+
+        // form
+        const includesHangul = (text) => /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/i.test(text);
+
+        const [value, setValue] = React.useState('')
+        const [errorMessage, setErrorMessage] = React.useState('')
+
+        function handleInputChange(e) {
+            const userValue = e.target.value;
+            setErrorMessage('')
+            if (includesHangul(userValue)) {
+                setErrorMessage('No Korean')
+            }
+            setValue(userValue.toUpperCase())
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            console.log("Form submit")
+
+            if (value === '') {
+                setErrorMessage('No Blank')
+                return
+            }
+            setCounter(counter + 1);
+            setMainCat(CAT2)
+        }
+
         return (
             <div>
                 <Title>{counter}번째 고양이 가라사대</Title>
-                <CatForm handleFormSubmit={handleFormSubmit}/>
+                <CatForm handleFormSubmit={handleFormSubmit}
+                         handleInputChange={handleInputChange}
+                         errorMessage={errorMessage}
+                         value={value}/>
                 <MainCard
                     img={mainCat}
                     alt="Cat"
