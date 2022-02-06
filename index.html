@@ -56,7 +56,7 @@
     console.log("야옹");
 
     const uuidv4 = () => {
-        return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+        return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
             (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
         );
     }
@@ -70,9 +70,15 @@
 
     function CatForm({handleFormSubmit}) {
 
+        const [value, setValue] = React.useState('')
+
+        function handleInputChange(e) {
+            setValue(e.target.value.toUpperCase())
+        }
+
         return (
             <form onSubmit={handleFormSubmit}>
-                <input type="text" name="name" placeholder="영어 대사를 입력해주세요"/>
+                <input type="text" name="name" placeholder="영어 대사를 입력해주세요" value={value} onChange={handleInputChange}/>
                 <button type="submit">생성</button>
             </form>
         )
@@ -146,7 +152,7 @@
         return (
             <div>
                 <Title>{counter}번째 고양이 가라사대</Title>
-                <CatForm handleFormSubmit={handleFormSubmit} />
+                <CatForm handleFormSubmit={handleFormSubmit}/>
                 <MainCard
                     img={mainCat}
                     alt="Cat"
