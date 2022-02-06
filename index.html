@@ -61,6 +61,15 @@
         );
     }
 
+    const jsonLocalStorage = {
+        setItem: (key, value) => {
+            localStorage.setItem(key, JSON.stringify(value));
+        },
+        getItem: (key) => {
+            return JSON.parse(localStorage.getItem(key));
+        },
+    };
+
     // component
     const Title = (props) => {
         return (
@@ -135,30 +144,37 @@
         const CAT3 = "https://cataas.com/cat/595f280b557291a9750ebf65/says/JavaScript";
 
         // title
-        const [counter, setCounter] = React.useState(1);
+        const [counter, setCounter] = React.useState(jsonLocalStorage.getItem("counter") || 1);
 
         // mainCard
         const [mainCat, setMainCat] = React.useState(CAT1);
-        const [heart, setHeart] = React.useState('♡')
+        const [heart, setHeart] = React.useState(jsonLocalStorage.getItem("heart") || '♡')
 
         function onHeartClick(e) {
             e.preventDefault()
             if (heart === "💖") {
                 setHeart("♡")
+                jsonLocalStorage.setItem("heart", "♡")
                 favorites.pop();
                 setFavorites(favorites)
+                jsonLocalStorage.setItem("favorites", favorites)
                 return
             }
             setHeart("💖")
-            setFavorites([...favorites, mainCat])
+            jsonLocalStorage.setItem("heart", "💖")
+            const newFavorites = [...favorites, mainCat];
+            setFavorites(newFavorites)
+            jsonLocalStorage.setItem("favorites", newFavorites)
         }
 
         // favorites
-        const [favorites, setFavorites] = React.useState([CAT1, CAT2]);
+        const [favorites, setFavorites] = React.useState(jsonLocalStorage.getItem("favorites") || []);
 
         // form
         function updateMainCat() {
-            setCounter(counter + 1);
+            const newCounter = counter + 1;
+            setCounter(newCounter);
+            jsonLocalStorage.setItem("counter", newCounter)
             setMainCat(CAT2)
         }
 
