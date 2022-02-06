@@ -53,7 +53,7 @@
 </body>
 
 <script type="text/babel">
-    console.log("야옹");
+    const includesHangul = (text) => /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/i.test(text);
 
     const uuidv4 = () => {
         return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
@@ -69,12 +69,34 @@
     }
 
     function CatForm(props) {
+        const [value, setValue] = React.useState('')
+        const [errorMessage, setErrorMessage] = React.useState('')
+
+        function handleInputChange(e) {
+            const userValue = e.target.value;
+            setErrorMessage('')
+            if (includesHangul(userValue)) {
+                setErrorMessage('No Korean')
+            }
+            setValue(userValue.toUpperCase())
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+
+            if (value === '') {
+                setErrorMessage('No Blank')
+                return
+            }
+            props.updateMainCat()
+        }
+
         return (
-            <form onSubmit={props.handleFormSubmit}>
-                <input type="text" name="name" placeholder="영어 대사를 입력해주세요" value={props.value}
-                       onChange={props.handleInputChange}/>
+            <form onSubmit={handleFormSubmit}>
+                <input type="text" name="name" placeholder="영어 대사를 입력해주세요" value={value}
+                       onChange={handleInputChange}/>
                 <button type="submit">생성</button>
-                <p style={{ color: 'red'}}>{props.errorMessage}</p>
+                <p style={{ color: 'red'}}>{errorMessage}</p>
             </form>
         )
     }
@@ -83,7 +105,7 @@
         return (
             <div className="main-card">
                 <img src={props.img} alt={props.alt}/>
-                <button onClick={props.handleHeartClick}>{props.heart}
+                <button onClick={props.onHeartClick}>{props.heart}
                 </button>
             </div>
         )
@@ -118,9 +140,7 @@
         const [mainCat, setMainCat] = React.useState(CAT1);
         const [heart, setHeart] = React.useState('♡')
 
-        function handleHeartClick(e) {
-            console.log("Press heart")
-            console.log("e", e)
+        function onHeartClick(e) {
             e.preventDefault()
             if (heart === "💖") {
                 setHeart("♡")
@@ -136,28 +156,7 @@
         const [favorites, setFavorites] = React.useState([CAT1, CAT2]);
 
         // form
-        const includesHangul = (text) => /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/i.test(text);
-
-        const [value, setValue] = React.useState('')
-        const [errorMessage, setErrorMessage] = React.useState('')
-
-        function handleInputChange(e) {
-            const userValue = e.target.value;
-            setErrorMessage('')
-            if (includesHangul(userValue)) {
-                setErrorMessage('No Korean')
-            }
-            setValue(userValue.toUpperCase())
-        }
-
-        function handleFormSubmit(e) {
-            e.preventDefault();
-            console.log("Form submit")
-
-            if (value === '') {
-                setErrorMessage('No Blank')
-                return
-            }
+        function updateMainCat() {
             setCounter(counter + 1);
             setMainCat(CAT2)
         }
@@ -165,14 +164,11 @@
         return (
             <div>
                 <Title>{counter}번째 고양이 가라사대</Title>
-                <CatForm handleFormSubmit={handleFormSubmit}
-                         handleInputChange={handleInputChange}
-                         errorMessage={errorMessage}
-                         value={value}/>
+                <CatForm updateMainCat={updateMainCat}/>
                 <MainCard
                     img={mainCat}
                     alt="Cat"
-                    handleHeartClick={handleHeartClick}
+                    onHeartClick={onHeartClick}
                     heart={heart}
                 ></MainCard>
                 <Favorites favorites={favorites}></Favorites>
