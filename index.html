@@ -89,6 +89,7 @@
                 return
             }
             props.updateMainCat()
+            props.initHeart()
         }
 
         return (
@@ -161,10 +162,17 @@
             setMainCat(CAT2)
         }
 
+        function initHeart() {
+            if (heart === "💖") {
+                setHeart("♡")
+            }
+        }
+
         return (
             <div>
                 <Title>{counter}번째 고양이 가라사대</Title>
-                <CatForm updateMainCat={updateMainCat}/>
+                <CatForm updateMainCat={updateMainCat}
+                         initHeart={initHeart}/>
                 <MainCard
                     img={mainCat}
                     alt="Cat"
