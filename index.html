@@ -70,6 +70,13 @@
         },
     };
 
+    const fetchCat = async (text) => {
+        const OPEN_API_DOMAIN = "https://cataas.com";
+        const response = await fetch(`${OPEN_API_DOMAIN}/cat/says/${text}?json=true`);
+        const responseJson = await response.json();
+        return `${OPEN_API_DOMAIN}/${responseJson.url}`;
+    };
+
     // component
     const Title = (props) => {
         return (
@@ -97,7 +104,7 @@
                 setErrorMessage('No Blank')
                 return
             }
-            props.updateMainCat()
+            props.updateMainCat(value)
             props.initHeart()
         }
 
@@ -171,12 +178,14 @@
         const [favorites, setFavorites] = React.useState(jsonLocalStorage.getItem("favorites") || []);
 
         // form
-        function updateMainCat() {
+        async function updateMainCat(value) {
+            const mainCat = await fetchCat(value);
+            
             const newCounter = counter + 1;
             setCounter(newCounter);
             jsonLocalStorage.setItem("counter", newCounter)
-            setMainCat(CAT2)
-            jsonLocalStorage.setItem("mainCat", CAT2)
+            setMainCat(mainCat)
+            jsonLocalStorage.setItem("mainCat", mainCat)
         }
 
         function initHeart() {
