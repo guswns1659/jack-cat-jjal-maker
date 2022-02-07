@@ -147,7 +147,7 @@
         const [counter, setCounter] = React.useState(jsonLocalStorage.getItem("counter") || 1);
 
         // mainCard
-        const [mainCat, setMainCat] = React.useState(CAT1);
+        const [mainCat, setMainCat] = React.useState(jsonLocalStorage.getItem("mainCat") || CAT1);
         const [heart, setHeart] = React.useState(jsonLocalStorage.getItem("heart") || '♡')
 
         function onHeartClick(e) {
@@ -176,11 +176,13 @@
             setCounter(newCounter);
             jsonLocalStorage.setItem("counter", newCounter)
             setMainCat(CAT2)
+            jsonLocalStorage.setItem("mainCat", CAT2)
         }
 
         function initHeart() {
             if (heart === "💖") {
                 setHeart("♡")
+                jsonLocalStorage.setItem("heart", "♡")
             }
         }
 
