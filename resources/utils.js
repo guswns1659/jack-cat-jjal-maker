@@ -8,7 +8,7 @@ const CAT3 = "https://cataas.com/cat/595f280b557291a9750ebf65/says/JavaScript";
 const includesHangul = (text) => /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/i.test(text);
 
 const jsonLocalStorage = {
-  setItem:/**/ (key, value) => {
+  setItem: (key, value) => {
     localStorage.setItem(key, JSON.stringify(value));
   },
   getItem: (key) => {
@@ -22,3 +22,9 @@ const fetchCat = async (text) => {
   const responseJson = await response.json();
   return `${OPEN_API_DOMAIN}/${responseJson.url}`;
 };
+
+const uuidv4 = () => {
+  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+  );
+}

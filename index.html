@@ -53,39 +53,69 @@
 </body>
 
 <script type="text/babel">
-    console.log("야옹");
+    const includesHangul = (text) => /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/i.test(text);
 
+    const uuidv4 = () => {
+        return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+            (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+        );
+    }
+
+    const jsonLocalStorage = {
+        setItem: (key, value) => {
+            localStorage.setItem(key, JSON.stringify(value));
+        },
+        getItem: (key) => {
+            return JSON.parse(localStorage.getItem(key));
+        },
+    };
+
+    // component
     const Title = (props) => {
         return (
             <h1>{props.children}</h1>
         )
     }
 
-    function CatForm({handleFormSubmit}) {
+    function CatForm(props) {
+        const [value, setValue] = React.useState('')
+        const [errorMessage, setErrorMessage] = React.useState('')
+
+        function handleInputChange(e) {
+            const userValue = e.target.value;
+            setErrorMessage('')
+            if (includesHangul(userValue)) {
+                setErrorMessage('No Korean')
+            }
+            setValue(userValue.toUpperCase())
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+
+            if (value === '') {
+                setErrorMessage('No Blank')
+                return
+            }
+            props.updateMainCat()
+            props.initHeart()
+        }
 
         return (
             <form onSubmit={handleFormSubmit}>
-                <input type="text" name="name" placeholder="영어 대사를 입력해주세요"/>
+                <input type="text" name="name" placeholder="영어 대사를 입력해주세요" value={value}
+                       onChange={handleInputChange}/>
                 <button type="submit">생성</button>
+                <p style={{ color: 'red'}}>{errorMessage}</p>
             </form>
         )
     }
 
     const MainCard = (props) => {
-
-        function handleHeartClick() {
-            console.log("Press heart")
-        }
-
-        function handleHeartMouseOver() {
-            console.log("Move over heart")
-        }
-
         return (
             <div className="main-card">
                 <img src={props.img} alt={props.alt}/>
-                <button onClick={handleHeartClick}
-                        onMouseOver={handleHeartMouseOver}>♡
+                <button onClick={props.onHeartClick}>{props.heart}
                 </button>
             </div>
         )
@@ -99,16 +129,11 @@
         )
     }
 
-    function Favorites() {
-        const CAT1 = "https://cataas.com/cat/60b73094e04e18001194a309/says/react";
-        const CAT2 = "https://cataas.com//cat/5e9970351b7a400011744233/says/inflearn";
-        const CAT3 = "https://cataas.com/cat/595f280b557291a9750ebf65/says/JavaScript";
-
-        const cats = [CAT1, CAT2];
+    function Favorites(props) {
 
         return (
             <ul className="favorites">
-                {cats.map(cat => <CatItem key={cat} img={cat}/>)}
+                {props.favorites.map(cat => <CatItem key={uuidv4()} img={cat}/>)}
             </ul>
         )
     }
@@ -118,27 +143,59 @@
         const CAT2 = "https://cataas.com//cat/5e9970351b7a400011744233/says/inflearn";
         const CAT3 = "https://cataas.com/cat/595f280b557291a9750ebf65/says/JavaScript";
 
-        const [counter, setCounter] = React.useState(1);
+        // title
+        const [counter, setCounter] = React.useState(jsonLocalStorage.getItem("counter") || 1);
+
+        // mainCard
         const [mainCat, setMainCat] = React.useState(CAT1);
+        const [heart, setHeart] = React.useState(jsonLocalStorage.getItem("heart") || '♡')
 
-        console.log("count", counter)
+        function onHeartClick(e) {
+            e.preventDefault()
+            if (heart === "💖") {
+                setHeart("♡")
+                jsonLocalStorage.setItem("heart", "♡")
+                favorites.pop();
+                setFavorites(favorites)
+                jsonLocalStorage.setItem("favorites", favorites)
+                return
+            }
+            setHeart("💖")
+            jsonLocalStorage.setItem("heart", "💖")
+            const newFavorites = [...favorites, mainCat];
+            setFavorites(newFavorites)
+            jsonLocalStorage.setItem("favorites", newFavorites)
+        }
 
-        function handleFormSubmit(e) {
-            e.preventDefault();
-            console.log("Form submit")
-            setCounter(counter + 1);
+        // favorites
+        const [favorites, setFavorites] = React.useState(jsonLocalStorage.getItem("favorites") || []);
+
+        // form
+        function updateMainCat() {
+            const newCounter = counter + 1;
+            setCounter(newCounter);
+            jsonLocalStorage.setItem("counter", newCounter)
             setMainCat(CAT2)
+        }
+
+        function initHeart() {
+            if (heart === "💖") {
+                setHeart("♡")
+            }
         }
 
         return (
             <div>
                 <Title>{counter}번째 고양이 가라사대</Title>
-                <CatForm handleFormSubmit={handleFormSubmit}/>
+                <CatForm updateMainCat={updateMainCat}
+                         initHeart={initHeart}/>
                 <MainCard
                     img={mainCat}
                     alt="Cat"
+                    onHeartClick={onHeartClick}
+                    heart={heart}
                 ></MainCard>
-                <Favorites></Favorites>
+                <Favorites favorites={favorites}></Favorites>
             </div>
         )
     }
