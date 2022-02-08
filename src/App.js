@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 
 const includesHangul = (text) => /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/i.test(text);
 
@@ -23,6 +24,13 @@ const fetchCat = async (text) => {
     const responseJson = await response.json();
     return `${OPEN_API_DOMAIN}/${responseJson.url}`;
 };
+
+const fetchCatWithAxios = async (text) => {
+    const OPEN_API_DOMAIN = "https://cataas.com";
+    const response = await axios.get(`${OPEN_API_DOMAIN}/cat/says/${text}?json=true`);
+    const data = await response.data;
+    return `${OPEN_API_DOMAIN}${data.url}`;
+}
 
 // component
 const Title = (props) => {
@@ -126,8 +134,7 @@ const App = () => {
 
     // form
     async function updateMainCat(value) {
-        const mainCat = await fetchCat(value);
-
+        const mainCat = await fetchCatWithAxios(value);
         const newCounter = counter + 1;
         setCounter(newCounter);
         jsonLocalStorage.setItem("counter", newCounter)
