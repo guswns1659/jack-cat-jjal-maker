@@ -1,13 +1,9 @@
 import React, {useEffect} from "react";
 import axios from "axios";
-
-const includesHangul = (text) => /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/i.test(text);
-
-const uuidv4 = () => {
-    return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
-        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-    );
-}
+import Favorites from "./components/Favorites"
+import Title from "./components/Title"
+import CatForm from "./components/CatForm"
+import MainCard from "./components/MainCard"
 
 const jsonLocalStorage = {
     setItem: (key, value) => {
@@ -32,78 +28,8 @@ const fetchCatWithAxios = async (text) => {
     return `${OPEN_API_DOMAIN}${data.url}`;
 }
 
-// component
-const Title = (props) => {
-    return (
-        <h1>{props.children}</h1>
-    )
-}
-
-function CatForm(props) {
-    const [value, setValue] = React.useState('')
-    const [errorMessage, setErrorMessage] = React.useState('')
-
-    function handleInputChange(e) {
-        const userValue = e.target.value;
-        setErrorMessage('')
-        if (includesHangul(userValue)) {
-            setErrorMessage('No Korean')
-        }
-        setValue(userValue.toUpperCase())
-    }
-
-    function handleFormSubmit(e) {
-        e.preventDefault();
-
-        if (value === '') {
-            setErrorMessage('No Blank')
-            return
-        }
-        props.updateMainCat(value)
-        props.initHeart()
-    }
-
-    return (
-        <form onSubmit={handleFormSubmit}>
-            <input type="text" name="name" placeholder="영어 대사를 입력해주세요" value={value}
-                   onChange={handleInputChange}/>
-            <button type="submit">생성</button>
-            <p style={{color: 'red'}}>{errorMessage}</p>
-        </form>
-    )
-}
-
-const MainCard = (props) => {
-    return (
-        <div className="main-card">
-            <img src={props.img} alt={props.alt}/>
-            <button onClick={props.onHeartClick}>{props.heart}
-            </button>
-        </div>
-    )
-}
-
-function CatItem(props) {
-    return (
-        <li>
-            <img src={props.img}/>
-        </li>
-    )
-}
-
-function Favorites(props) {
-
-    return (
-        <ul className="favorites">
-            {props.favorites.map(cat => <CatItem key={uuidv4()} img={cat}/>)}
-        </ul>
-    )
-}
-
 const App = () => {
     const CAT1 = "https://cataas.com/cat/60b73094e04e18001194a309/says/react";
-    const CAT2 = "https://cataas.com//cat/5e9970351b7a400011744233/says/inflearn";
-    const CAT3 = "https://cataas.com/cat/595f280b557291a9750ebf65/says/JavaScript";
 
     // title
     const [counter, setCounter] = React.useState(jsonLocalStorage.getItem("counter") || 1);
