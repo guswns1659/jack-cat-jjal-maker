@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import axios from "axios";
 
 const includesHangul = (text) => /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/i.test(text);
@@ -111,6 +111,15 @@ const App = () => {
     // mainCard
     const [mainCat, setMainCat] = React.useState(jsonLocalStorage.getItem("mainCat") || CAT1);
     const [heart, setHeart] = React.useState(jsonLocalStorage.getItem("heart") || '♡')
+
+    async function setInitialCat() {
+        const firstCat = await fetchCatWithAxios('First cat');
+        setMainCat(firstCat);
+    }
+
+    useEffect(() => {
+        setInitialCat();
+    }, []);
 
     function onHeartClick(e) {
         e.preventDefault()
