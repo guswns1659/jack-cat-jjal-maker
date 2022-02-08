@@ -13,11 +13,18 @@ function CatItem(props) {
 }
 
 function Favorites(props) {
+    const favorites = props.favorites;
+
+    if (favorites.length === 0) {
+        return <div>고양이 사진을 추가하세요!!</div>
+    }
 
     return (
-        <ul className="favorites">
-            {props.favorites.map(cat => <CatItem key={uuidv4()} img={cat}/>)}
-        </ul>
+        <div>
+            <ul className="favorites">
+                {favorites.map(cat => <CatItem key={uuidv4()} img={cat}/>)}
+            </ul>
+        </div>
     )
 }
 
