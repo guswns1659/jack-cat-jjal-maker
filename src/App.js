@@ -32,7 +32,9 @@ const App = () => {
     const CAT1 = "https://cataas.com/cat/60b73094e04e18001194a309/says/react";
 
     // title
-    const [counter, setCounter] = React.useState(jsonLocalStorage.getItem("counter") || 1);
+    const [counter, setCounter] = React.useState(() => {
+        return jsonLocalStorage.getItem("counter") || 0
+    });
 
     // mainCard
     const [mainCat, setMainCat] = React.useState(jsonLocalStorage.getItem("mainCat") || CAT1);
@@ -65,16 +67,22 @@ const App = () => {
     }
 
     // favorites
-    const [favorites, setFavorites] = React.useState(jsonLocalStorage.getItem("favorites") || []);
+    const [favorites, setFavorites] = React.useState(() => {
+        return jsonLocalStorage.getItem("favorites") || []
+    });
 
     // form
     async function updateMainCat(value) {
         const mainCat = await fetchCatWithAxios(value);
-        const newCounter = counter + 1;
-        setCounter(newCounter);
-        jsonLocalStorage.setItem("counter", newCounter)
         setMainCat(mainCat)
         jsonLocalStorage.setItem("mainCat", mainCat)
+
+        setCounter((prev) => {
+            const newCounter = prev + 1;
+            jsonLocalStorage.setItem("counter", newCounter)
+            return newCounter
+        });
+
     }
 
     function initHeart() {
@@ -86,7 +94,7 @@ const App = () => {
 
     return (
         <div>
-            <Title>{counter}번째 고양이 가라사대</Title>
+            <Title counter={counter}></Title>
             <CatForm updateMainCat={updateMainCat}
                      initHeart={initHeart}/>
             <MainCard
