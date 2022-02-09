@@ -32,7 +32,7 @@ const App = () => {
     const CAT1 = "https://cataas.com/cat/60b73094e04e18001194a309/says/react";
 
     // title
-    const [counter, setCounter] = React.useState(jsonLocalStorage.getItem("counter") || 1);
+    const [counter, setCounter] = React.useState(jsonLocalStorage.getItem("counter") || 0);
 
     // mainCard
     const [mainCat, setMainCat] = React.useState(jsonLocalStorage.getItem("mainCat") || CAT1);
@@ -86,7 +86,7 @@ const App = () => {
 
     return (
         <div>
-            <Title>{counter}번째 고양이 가라사대</Title>
+            <Title counter={counter}></Title>
             <CatForm updateMainCat={updateMainCat}
                      initHeart={initHeart}/>
             <MainCard
