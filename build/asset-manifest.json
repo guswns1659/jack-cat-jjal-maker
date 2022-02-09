@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/jack-cat-jjal-maker/static/css/main.6ccbde02.css",
+    "main.js": "/jack-cat-jjal-maker/static/js/main.e56d6886.js",
+    "index.html": "/jack-cat-jjal-maker/index.html",
+    "main.6ccbde02.css.map": "/jack-cat-jjal-maker/static/css/main.6ccbde02.css.map",
+    "main.e56d6886.js.map": "/jack-cat-jjal-maker/static/js/main.e56d6886.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.6ccbde02.css",
+    "static/js/main.e56d6886.js"
+  ]
+}
